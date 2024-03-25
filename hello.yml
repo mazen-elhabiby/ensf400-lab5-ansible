@@ -3,6 +3,7 @@
   hosts: all
   tasks:
   - name: all host are identified with a file
+    become: True
     copy:
       content: My family is {{ ansible_os_family }}
       dest: /family.txt
@@ -48,4 +49,34 @@
   - name: Start example Node.js app.
     command: forever start /node-app/app.js
     when: "forever_list.stdout.find('/node-app/app.js') == -1"
+  
+  # Play 3 - Running the Nginx
+- name: Load balancer Nginx setup 
+  hosts: loadbalancer
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apk:
+        name: nginx
+        update_cache: yes
+        state: latest
+
+    - name: Copy NGINX config for load balancing
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify: Restart NGINX
+
+    - name: test if nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+  handlers:
+    - name: Restart NGINX
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes
+    
 
