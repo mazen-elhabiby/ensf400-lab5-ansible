@@ -1,9 +1,7 @@
 FROM alpine:latest
 
 #installing nginx
-#RUN apk add --update nginx && \
- #   rm -rf /var/cache/apk/* && \
-  #  mkdir -p /run/nginx
+RUN apk add --update nginx && \ rm -rf /var/cache/apk/* && \  mkdir -p /run/nginx
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 

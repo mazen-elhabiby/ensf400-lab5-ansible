@@ -60,7 +60,13 @@
         name: nginx
         update_cache: yes
         state: latest
-
+      when: ansible_os_family == "Alpine"
+    - name: Ensure NGINX configuration directory exists
+      file:
+        path: /etc/nginx
+        state: directory
+        mode: '0755'
+      become: yes
     - name: Copy NGINX config for load balancing
       copy:
         src: nginx.conf
